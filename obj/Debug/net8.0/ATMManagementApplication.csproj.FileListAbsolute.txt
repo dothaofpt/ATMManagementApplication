@@ -109,3 +109,4 @@ D:\ATMManagementApplication\obj\Debug\net8.0\refint\ATMManagementApplication.dll
 D:\ATMManagementApplication\obj\Debug\net8.0\ATMManagementApplication.pdb
 D:\ATMManagementApplication\obj\Debug\net8.0\ATMManagementApplication.genruntimeconfig.cache
 D:\ATMManagementApplication\obj\Debug\net8.0\ref\ATMManagementApplication.dll
+D:\ATMManagementApplication\obj\Debug\net8.0\ATMManagementApplication.sourcelink.json
