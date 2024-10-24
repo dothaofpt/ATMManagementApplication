@@ -30,9 +30,8 @@ namespace ATMManagementApplication.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("CustomerId"));
 
-                    b.Property<string>("Balance")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Name")
                         .IsRequired()

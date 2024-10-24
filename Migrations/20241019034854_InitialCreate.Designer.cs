@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATMManagementApplication.Migrations
 {
     [DbContext(typeof(ATMContext))]
-    [Migration("20241019044827_InitialCreate")]
+    [Migration("20241019034854_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,9 +33,8 @@ namespace ATMManagementApplication.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("CustomerId"));
 
-                    b.Property<string>("Balance")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Name")
                         .IsRequired()
