@@ -5,7 +5,7 @@
 namespace ATMManagementApplication.Migrations
 {
     /// <inheritdoc />
-    public partial class AddEmailColumnToCustomer : Migration
+    public partial class AddEmailToCustomer : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

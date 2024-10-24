@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATMManagementApplication.Migrations
 {
     [DbContext(typeof(ATMContext))]
-    [Migration("20241024023626_AddEmailColumnToCustomer")]
-    partial class AddEmailColumnToCustomer
+    [Migration("20241024030420_AddEmailToCustomer")]
+    partial class AddEmailToCustomer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

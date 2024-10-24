@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Mvc;
 using ATMManagementApplication.Models;
 using ATMManagementApplication.Data;
@@ -5,6 +6,7 @@ using System.Linq;
 using System;
 using System.Net;
 using System.Net.Mail; // Thêm using cho gửi email
+using Microsoft.Extensions.Options; // Để sử dụng IOptions
 
 namespace ATMManagementApplication.Controllers
 {
@@ -13,10 +15,12 @@ namespace ATMManagementApplication.Controllers
     public class ATMController : ControllerBase
     {
         private readonly ATMContext _context;
+        private readonly EmailSettings _emailSettings; // Thêm EmailSettings
 
-        public ATMController(ATMContext context)
+        public ATMController(ATMContext context, IOptions<EmailSettings> emailSettings)
         {
             _context = context;
+            _emailSettings = emailSettings.Value; // Lấy cấu hình email
         }
 
         [HttpGet("balance/{customerId}")]
@@ -129,13 +133,25 @@ namespace ATMManagementApplication.Controllers
             _context.SaveChanges();
 
             // Gửi thông báo qua email
+            if (string.IsNullOrEmpty(receiver.Email))
+                return BadRequest("Receiver email is not available"); // Kiểm tra email của người nhận
+
             string subject = "Transfer Successful";
             string body = $"Dear {receiver.Name},\n\n" +
                           $"You have received {request.Amount} from {sender.Name}.\n" +
                           $"Your new balance is {receiver.Balance}.\n\n" +
                           "Thank you for using our service.";
 
-            SendEmail(receiver.Email, subject, body); // Gửi email thông báo đến người nhận
+            // Gửi email thông báo đến người nhận
+            try
+            {
+                SendEmail(receiver.Email, subject, body);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi gửi email (ghi log, v.v.)
+                Console.WriteLine($"Email sending failed: {ex.Message}");
+            }
 
             return Ok(new { message = "Transfer successful", senderNewBalance = sender.Balance });
         }
@@ -193,18 +209,24 @@ namespace ATMManagementApplication.Controllers
             using (var client = new SmtpClient("smtp.gmail.com", 587)) // Sử dụng smtp.gmail.com
             {
                 client.EnableSsl = true; // Bật SSL
-                client.Credentials = new NetworkCredential("hkpojjj@gmail.com", "thao2005"); // Email người gửi và mật khẩu
+                client.Credentials = new NetworkCredential(_emailSettings.SenderEmail, "idbgvmgqahyiuoaz"); // Lấy thông tin từ cấu hình
                 var mailMessage = new MailMessage
                 {
-                    From = new MailAddress("hkpojjj@gmail.com"), 
+                    From = new MailAddress(_emailSettings.SenderEmail),
                     Subject = subject,
                     Body = body,
-                    IsBodyHtml = true 
+                    IsBodyHtml = true
                 };
                 mailMessage.To.Add(toEmail); // Đây là email người nhận
                 client.Send(mailMessage);
             }
         }
+    }
+
+    public class EmailSettings // Lớp để cấu hình email
+    {
+        public string SenderEmail { get; set; }
+        public string SenderPassword { get; set; }
     }
 
     public class WithdrawRequest
